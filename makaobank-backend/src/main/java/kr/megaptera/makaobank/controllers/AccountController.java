@@ -5,6 +5,7 @@ import kr.megaptera.makaobank.exceptions.AccountNotFound;
 import kr.megaptera.makaobank.models.Account;
 import kr.megaptera.makaobank.services.AccountService;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

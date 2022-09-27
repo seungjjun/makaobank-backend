@@ -1,7 +1,7 @@
 package kr.megaptera.makaobank.repositories;
 
-import kr.megaptera.makaobank.models.Account;
 import kr.megaptera.makaobank.models.AccountNumber;
+import kr.megaptera.makaobank.models.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,15 +12,20 @@ import javax.transaction.Transactional;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class AccountRepositoryTest {
-
+class TransactionRepositoryTest {
   @Autowired
-  private AccountRepository accountRepository;
+  private TransactionRepository transactionRepository;
 
   @Test
   void save() {
-    Account account = new Account(new AccountNumber("1234"), "Pikachu");
+    AccountNumber sender = new AccountNumber("1234");
+    AccountNumber receiver = new AccountNumber("5678");
+    Long amount = 100_000L;
+    String name = "Raichu";
 
-    accountRepository.save(account);
+    Transaction transaction = new Transaction(
+        sender, receiver, amount, name);
+
+    transactionRepository.save(transaction);
   }
 }

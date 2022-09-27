@@ -11,22 +11,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @SpringBootApplication
 public class MakaobankApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MakaobankApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(MakaobankApplication.class, args);
+  }
 
-	@Bean
-	public WebSecurityCustomizer ignoringCustomizer() {
-		return (web) -> web.ignoring().antMatchers("/**");
-	}
+  @Bean
+  public WebSecurityCustomizer ignoringCustomizer() {
+    return (web) -> web.ignoring().antMatchers("/**");
+  }
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurerAdapter() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins(("*"));
-			}
-		};
-	}
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurerAdapter() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins(("*"));
+      }
+    };
+  }
 }

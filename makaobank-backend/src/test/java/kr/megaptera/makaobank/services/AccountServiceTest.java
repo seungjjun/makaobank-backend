@@ -1,6 +1,7 @@
 package kr.megaptera.makaobank.services;
 
 import kr.megaptera.makaobank.models.Account;
+import kr.megaptera.makaobank.models.AccountNumber;
 import kr.megaptera.makaobank.repositories.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,10 +31,12 @@ class AccountServiceTest {
 
   @Test
   void account() {
-    Account account = accountService.detail("1234");
+    AccountNumber accountNumber = new AccountNumber("1234");
 
-    verify(accountRepository).findByAccountNumber("1234");
+    Account account = accountService.detail(accountNumber);
 
-    assertThat(account.accountNumber()).isEqualTo("1234");
+    verify(accountRepository).findByAccountNumber(accountNumber);
+
+    assertThat(account.accountNumber()).isEqualTo(new AccountNumber("1234"));
   }
 }

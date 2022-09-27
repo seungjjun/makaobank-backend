@@ -11,6 +11,9 @@ public class TransferDto {
   @NotNull
   private Long amount;
 
+  @NotBlank
+  private String name;
+
   public String getTo() {
     return to;
   }
@@ -19,5 +22,7 @@ public class TransferDto {
     return amount;
   }
 
-
+  public String getName() {
+    return name;
+  }
 }

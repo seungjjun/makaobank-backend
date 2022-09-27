@@ -4,6 +4,8 @@ import kr.megaptera.makaobank.exceptions.AmountNotEnough;
 import kr.megaptera.makaobank.exceptions.IncorrectAmount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,5 +50,16 @@ class AccountTest {
     assertThrows(AmountNotEnough.class, () -> {
       account1.transferTo(account2, transferAmount);
     });
+  }
+
+  @Test
+  void authenticate() {
+    Account account = Account.fake("1234");
+
+    PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
+    account.changePassword("password", passwordEncoder);
+
+    assertThat(account.authenticate("password", passwordEncoder)).isTrue();
+    assertThat(account.authenticate("xxx", passwordEncoder)).isFalse();
   }
 }

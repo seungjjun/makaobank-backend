@@ -1,6 +1,7 @@
 package kr.megaptera.makaobank.backdoor;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,31 +16,39 @@ import java.time.LocalDateTime;
 public class BackdoorController {
   private final JdbcTemplate jdbcTemplate;
 
-  public BackdoorController(JdbcTemplate jdbcTemplate) {
+  private final PasswordEncoder passwordEncoder;
+
+
+  public BackdoorController(JdbcTemplate jdbcTemplate,
+                            PasswordEncoder passwordEncoder) {
     this.jdbcTemplate = jdbcTemplate;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @GetMapping("setup-database")
   public String setupDatabase() {
     LocalDateTime now = LocalDateTime.now();
 
+    jdbcTemplate.execute("DELETE FROM transaction");
     jdbcTemplate.execute("DELETE FROM account");
 
     jdbcTemplate.update("" +
                   "INSERT INTO account(" +
-                  "   id, name, account_number, amount," +
+                  "   id, account_number, encoded_password, name, amount," +
                   "   created_at, updated_at" +
                   ")" +
-                  " VALUES(1, 'Pikachu', '1234', 123000, ?, ?)",
-        now, now);
+                  " VALUES(1, ?, ?, ?, ?, ?, ?)",
+        "1234", passwordEncoder.encode("password"), "Pikachu",
+        1_000_000, now, now);
 
     jdbcTemplate.update("" +
-                  "INSERT INTO account(" +
-                  "   id, name, account_number, amount," +
-                  "   created_at, updated_at" +
-                  ")" +
-                  " VALUES(2, 'Raichu', '5678', 123000, ?, ?)",
-        now, now);
+            "INSERT INTO account(" +
+            "   id, account_number, encoded_password, name, amount," +
+            "   created_at, updated_at" +
+            ")" +
+            " VALUES(2, ?, ?, ?, ?, ?, ?)",
+        "5678", passwordEncoder.encode("password"), "Raichu",
+        100_000, now, now);
     return "OK";
   }
 

@@ -1,10 +1,13 @@
 package kr.megaptera.makaobank.models;
 
 import kr.megaptera.makaobank.dtos.AccountDto;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 public class Account {
@@ -18,7 +21,19 @@ public class Account {
 
   private Long amount;
 
+  @CreationTimestamp
+  private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  private LocalDateTime updatedAt;
+
   public Account() {
+  }
+
+  public Account(String accountNumber, String name) {
+    this.accountNumber = accountNumber;
+    this.name = name;
+    this.amount = 0L;
   }
 
   public Account(Long id, String accountNumber, String name, Long amount) {

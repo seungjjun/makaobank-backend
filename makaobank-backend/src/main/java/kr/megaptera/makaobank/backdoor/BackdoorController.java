@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("backdoor")
@@ -20,16 +21,25 @@ public class BackdoorController {
 
   @GetMapping("setup-database")
   public String setupDatabase() {
+    LocalDateTime now = LocalDateTime.now();
+
     jdbcTemplate.execute("DELETE FROM account");
 
-    jdbcTemplate.execute("" +
-        "INSERT INTO account(id, name, account_number, amount)" +
-        " VALUES(1, 'Pikachu', '1234', 123000)");
+    jdbcTemplate.update("" +
+                  "INSERT INTO account(" +
+                  "   id, name, account_number, amount," +
+                  "   created_at, updated_at" +
+                  ")" +
+                  " VALUES(1, 'Pikachu', '1234', 123000, ?, ?)",
+        now, now);
 
-    jdbcTemplate.execute("" +
-        "INSERT INTO account(id, name, account_number, amount)" +
-        " VALUES(2, 'Raichu', '5678', 123456000)");
-
+    jdbcTemplate.update("" +
+                  "INSERT INTO account(" +
+                  "   id, name, account_number, amount," +
+                  "   created_at, updated_at" +
+                  ")" +
+                  " VALUES(2, 'Raichu', '5678', 123000, ?, ?)",
+        now, now);
     return "OK";
   }
 

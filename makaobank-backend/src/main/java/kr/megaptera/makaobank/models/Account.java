@@ -1,6 +1,7 @@
 package kr.megaptera.makaobank.models;
 
 import kr.megaptera.makaobank.dtos.AccountDto;
+import kr.megaptera.makaobank.exceptions.IncorrectAmount;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -43,11 +44,20 @@ public class Account {
     this.amount = amount;
   }
 
+  public void transferTo(Account other, Long amount) {
+    if(amount <= 0 || this.amount < amount) {
+      throw new IncorrectAmount(amount);
+    }
+
+    this.amount -= amount;
+    other.amount += amount;
+  }
+
   public Long getId() {
     return id;
   }
 
-  public String getAccountNumber() {
+  public String accountNumber() {
     return accountNumber;
   }
 
@@ -55,15 +65,15 @@ public class Account {
     return name;
   }
 
-  public Long getAmount() {
+  public Long amount() {
     return amount;
   }
 
   public static Account fake(String accountNumber) {
     return new Account(1L, accountNumber, "Pikachu", 100L);
   }
-
   public AccountDto toDto() {
     return new AccountDto(accountNumber, name, amount);
   }
+
 }

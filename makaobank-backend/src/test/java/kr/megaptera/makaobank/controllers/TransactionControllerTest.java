@@ -43,7 +43,7 @@ class TransactionControllerTest {
 
     Transaction transaction = mock(Transaction.class);
 
-    given(transactionService.list(accountNumber))
+    given(transactionService.list(accountNumber, 1))
         .willReturn(List.of(transaction));
 
     mockMvc.perform(MockMvcRequestBuilders.get("/transactions"))
@@ -52,7 +52,7 @@ class TransactionControllerTest {
             containsString("\"transactions\":[")
         ));
 
-    verify(transactionService).list(accountNumber);
+    verify(transactionService).list(accountNumber, 1);
   }
 
   @Test

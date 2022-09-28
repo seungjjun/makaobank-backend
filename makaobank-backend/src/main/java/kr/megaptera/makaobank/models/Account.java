@@ -47,7 +47,7 @@ public class Account {
     this.accountNumber = accountNumber;
     this.name = name;
     this.encodedPassword = passwoprd;
-    this.amount = 0L;
+    this.amount = 1000L;
   }
 
   public Account(

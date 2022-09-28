@@ -1,7 +1,9 @@
 package kr.megaptera.makaobank.controllers;
 
+import kr.megaptera.makaobank.dtos.ErrorDto;
 import kr.megaptera.makaobank.dtos.LoginRequestDto;
 import kr.megaptera.makaobank.dtos.LoginResultDto;
+import kr.megaptera.makaobank.dtos.IncorrectAccountErrorDto;
 import kr.megaptera.makaobank.exceptions.LoginFailed;
 import kr.megaptera.makaobank.models.Account;
 import kr.megaptera.makaobank.models.AccountNumber;
@@ -52,7 +54,7 @@ public class SessionController {
 
   @ExceptionHandler(LoginFailed.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public String loginFailed() {
-    return "아이디 혹은 비밀번호가 맞지 않습니다";
+  public ErrorDto loginFailed() {
+    return new IncorrectAccountErrorDto();
   }
 }

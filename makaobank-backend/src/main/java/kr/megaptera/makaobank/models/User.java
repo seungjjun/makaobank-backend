@@ -1,7 +1,9 @@
 package kr.megaptera.makaobank.models;
 
+import kr.megaptera.makaobank.dtos.UserCreatedDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +18,8 @@ public class User {
 
   private String name;
 
-  private String accountNumber;
+  @Embedded
+  private AccountNumber accountNumber;
 
   private String password;
 
@@ -27,7 +30,7 @@ public class User {
 
   public User(Long id,
               String name,
-              String accountNumber) {
+              AccountNumber accountNumber) {
 
     this.id = id;
     this.name = name;
@@ -36,7 +39,7 @@ public class User {
 
   public User(Long id,
               String name,
-              String accountNumber,
+              AccountNumber accountNumber,
               String password,
               String confirmPassword) {
     this.id = id;
@@ -54,7 +57,7 @@ public class User {
     return name;
   }
 
-  public String getAccountNumber() {
+  public AccountNumber getAccountNumber() {
     return accountNumber;
   }
 
@@ -72,5 +75,13 @@ public class User {
 
   public boolean authenticate(PasswordEncoder passwordEncoder, String password) {
     return passwordEncoder.matches(password, this.password);
+  }
+
+  public UserCreatedDto toCreatedDto() {
+    return new UserCreatedDto(id, name, accountNumber.value());
+  }
+
+  public Account registerAccount(User user) {
+    return new Account(user.accountNumber, user.name, user.password);
   }
 }

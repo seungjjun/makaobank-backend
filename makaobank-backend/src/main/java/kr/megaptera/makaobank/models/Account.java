@@ -43,6 +43,13 @@ public class Account {
     this.amount = 0L;
   }
 
+  public Account(AccountNumber accountNumber, String name, String passwoprd) {
+    this.accountNumber = accountNumber;
+    this.name = name;
+    this.encodedPassword = passwoprd;
+    this.amount = 0L;
+  }
+
   public Account(
       Long id,
       AccountNumber accountNumber,

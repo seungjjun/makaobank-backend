@@ -2,6 +2,7 @@ package kr.megaptera.makaobank.services;
 
 import kr.megaptera.makaobank.dtos.UserRegistrationDto;
 import kr.megaptera.makaobank.models.User;
+import kr.megaptera.makaobank.repositories.AccountRepository;
 import kr.megaptera.makaobank.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -15,11 +16,13 @@ class UserServiceTest {
   @Test
   void create() {
     UserRepository userRepository = mock(UserRepository.class);
+    AccountRepository accountRepository = mock(AccountRepository.class);
     PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
 
     UserService userService = new UserService(
         userRepository,
-        passwordEncoder
+        passwordEncoder,
+        accountRepository
     );
 
     UserRegistrationDto userRegistrationDto = new UserRegistrationDto(

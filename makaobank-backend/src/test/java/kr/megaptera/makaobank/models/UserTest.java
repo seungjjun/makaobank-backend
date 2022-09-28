@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserTest {
   @Test
   void creation() {
-    User user = new User(1L, "노승준", "11112222");
+    User user = new User(1L, "노승준", new AccountNumber("11112222"));
 
     assertThat(user.getName()).isEqualTo("노승준");
   }

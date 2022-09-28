@@ -1,6 +1,8 @@
 package kr.megaptera.makaobank.controllers;
 
+import kr.megaptera.makaobank.dtos.UserCreatedDto;
 import kr.megaptera.makaobank.dtos.UserRegistrationDto;
+import kr.megaptera.makaobank.models.User;
 import kr.megaptera.makaobank.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,14 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
-  private UserService userService;
+  private final UserService userService;
+
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
   @PostMapping("/register")
   @ResponseStatus(HttpStatus.CREATED)
-  public String register(
+  public UserCreatedDto register(
       @RequestBody UserRegistrationDto userRegistrationDto
   ) {
-    userService.create(userRegistrationDto);
-    return "";
+    User user = userService.create(userRegistrationDto);
+    return user.toCreatedDto();
   }
 }

@@ -6,10 +6,12 @@ import kr.megaptera.makaobank.models.AccountNumber;
 import kr.megaptera.makaobank.models.Transaction;
 import kr.megaptera.makaobank.services.TransactionService;
 import kr.megaptera.makaobank.services.TransferService;
+import kr.megaptera.makaobank.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,8 +39,13 @@ class TransactionControllerTest {
   @MockBean
   private TransactionService transactionService;
 
+  @SpyBean
+  private JwtUtil jwtUtil;
+
   @Test
   void list() throws Exception {
+    String token = jwtUtil.encode(new AccountNumber("1234"));
+
     AccountNumber accountNumber = new AccountNumber("1234");
 
     Transaction transaction = mock(Transaction.class);
@@ -46,7 +53,8 @@ class TransactionControllerTest {
     given(transactionService.list(accountNumber, 1))
         .willReturn(List.of(transaction));
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/transactions"))
+    mockMvc.perform(MockMvcRequestBuilders.get("/transactions")
+            .header("Authorization", "Bearer " + token))
         .andExpect(status().isOk())
         .andExpect(content().string(
             containsString("\"transactions\":[")
@@ -57,11 +65,14 @@ class TransactionControllerTest {
 
   @Test
   void transfer() throws Exception {
+    String token = jwtUtil.encode(new AccountNumber("1234"));
+
     AccountNumber sender = new AccountNumber("1234");
     AccountNumber receiver = new AccountNumber("5678");
     String name = "Pikachu";
 
     mockMvc.perform(MockMvcRequestBuilders.post("/transactions")
+            .header("Authorization", "Bearer " + token)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{" +
@@ -77,13 +88,15 @@ class TransactionControllerTest {
 
   @Test
   void transferWithIncorrectAccountNumber() throws Exception {
+    String token = jwtUtil.encode(new AccountNumber("1234"));
+
     AccountNumber accountNumber = new AccountNumber("123456789");
 
     given(transferService.transfer(any(), any(), any(), any()))
         .willThrow(new AccountNotFound(accountNumber));
 
-
     mockMvc.perform(MockMvcRequestBuilders.post("/transactions")
+            .header("Authorization", "Bearer " + token)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{" +
@@ -99,12 +112,15 @@ class TransactionControllerTest {
 
   @Test
   void transferWithIncorrectAmount() throws Exception {
+    String token = jwtUtil.encode(new AccountNumber("1234"));
+
     Long amount = 100L;
     given(transferService.transfer(any(), any(), any(), any()))
         .willThrow(new IncorrectAmount(amount));
 
 
     mockMvc.perform(MockMvcRequestBuilders.post("/transactions")
+            .header("Authorization", "Bearer " + token)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content("{" +

@@ -4,6 +4,7 @@ import kr.megaptera.makaobank.dtos.AccountNotFoundErrorDto;
 import kr.megaptera.makaobank.dtos.AmountNotEnoughErrorDto;
 import kr.megaptera.makaobank.dtos.ErrorDto;
 import kr.megaptera.makaobank.dtos.IncorrectAmountErrorDto;
+import kr.megaptera.makaobank.dtos.MyAccountFoundErrorDto;
 import kr.megaptera.makaobank.dtos.TransactionDto;
 import kr.megaptera.makaobank.dtos.TransactionsDto;
 import kr.megaptera.makaobank.dtos.TransferDto;
@@ -11,6 +12,7 @@ import kr.megaptera.makaobank.dtos.TransferResultDto;
 import kr.megaptera.makaobank.exceptions.AccountNotFound;
 import kr.megaptera.makaobank.exceptions.AmountNotEnough;
 import kr.megaptera.makaobank.exceptions.IncorrectAmount;
+import kr.megaptera.makaobank.exceptions.MyAccountFound;
 import kr.megaptera.makaobank.models.AccountNumber;
 import kr.megaptera.makaobank.services.TransactionService;
 import kr.megaptera.makaobank.services.TransferService;
@@ -86,5 +88,11 @@ public class TransactionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorDto amountNotEnough() {
     return new AmountNotEnoughErrorDto();
+  }
+
+  @ExceptionHandler(MyAccountFound.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorDto myAccountFound() {
+    return new MyAccountFoundErrorDto();
   }
 }

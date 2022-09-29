@@ -1,5 +1,6 @@
 package kr.megaptera.makaobank.controllers;
 
+import kr.megaptera.makaobank.repositories.AccountRepository;
 import kr.megaptera.makaobank.repositories.UserRepository;
 import kr.megaptera.makaobank.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ class UserControllerTest {
 
   @MockBean
   private UserRepository userRepository;
+
+  @MockBean
+  private AccountRepository accountRepository;
 
   @Test
   void register() throws Exception {

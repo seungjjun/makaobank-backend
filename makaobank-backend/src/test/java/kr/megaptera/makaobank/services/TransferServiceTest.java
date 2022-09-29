@@ -3,6 +3,7 @@ package kr.megaptera.makaobank.services;
 import kr.megaptera.makaobank.exceptions.AccountNotFound;
 import kr.megaptera.makaobank.exceptions.AmountNotEnough;
 import kr.megaptera.makaobank.exceptions.IncorrectAmount;
+import kr.megaptera.makaobank.exceptions.MyAccountFound;
 import kr.megaptera.makaobank.models.Account;
 import kr.megaptera.makaobank.models.AccountNumber;
 import kr.megaptera.makaobank.repositories.AccountRepository;
@@ -146,6 +147,25 @@ class TransferServiceTest {
       transferService.transfer(
           accountNumber1, accountNumber2,
           transferAmount, name);
+    });
+  }
+
+  @Test
+  void transferToMyAccount() {
+    AccountNumber accountNumber1 = new AccountNumber("1234");
+    String name = "Pikachu";
+
+    Long amount1 = 100_000L;
+
+    Account account1 = new Account(1L, accountNumber1, "Pikachu", amount1);
+
+    given(accountRepository.findByAccountNumber(account1.accountNumber()))
+        .willReturn(Optional.of(account1));
+
+    assertThrows(MyAccountFound.class, () -> {
+      transferService.transfer(
+          accountNumber1, accountNumber1,
+          100L, name);
     });
   }
 }

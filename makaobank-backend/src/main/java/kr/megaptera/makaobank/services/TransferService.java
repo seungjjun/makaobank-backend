@@ -1,6 +1,7 @@
 package kr.megaptera.makaobank.services;
 
 import kr.megaptera.makaobank.exceptions.AccountNotFound;
+import kr.megaptera.makaobank.exceptions.MyAccountFound;
 import kr.megaptera.makaobank.models.Account;
 import kr.megaptera.makaobank.models.AccountNumber;
 import kr.megaptera.makaobank.models.Transaction;
@@ -30,6 +31,10 @@ public class TransferService {
 
     Account account2 = accountRepository.findByAccountNumber(to)
         .orElseThrow(() -> new AccountNotFound(to));
+
+    if(from.equals(to)) {
+      throw new MyAccountFound();
+    }
 
     account1.transferTo(account2, amount);
 

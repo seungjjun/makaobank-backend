@@ -21,7 +21,6 @@ public class UserRegistrationDto {
     this.password = password;
     this.confirmPassword = confirmPassword;
   }
-
   public String getName() {
     return name;
   }

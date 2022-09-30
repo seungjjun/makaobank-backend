@@ -1,6 +1,7 @@
 package kr.megaptera.makaobank.services;
 
 import kr.megaptera.makaobank.dtos.UserRegistrationDto;
+import kr.megaptera.makaobank.exceptions.ExistedAccountNumber;
 import kr.megaptera.makaobank.models.Account;
 import kr.megaptera.makaobank.models.AccountNumber;
 import kr.megaptera.makaobank.models.User;
@@ -28,8 +29,11 @@ public class UserService {
   }
 
   public User create(UserRegistrationDto userRegistrationDto) {
+    String accountNumber = userRegistrationDto.getAccountNumber();
 
-
+    if(!(userRepository.getByAccountNumber(new AccountNumber(accountNumber)) == null)) {
+      throw new ExistedAccountNumber();
+    }
 
     User user = new User(null,
         userRegistrationDto.getName(),
